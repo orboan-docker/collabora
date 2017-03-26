@@ -1,0 +1,77 @@
+version: '2'
+services:
+  mysql:
+    image: orboan/dcsss-mariadb
+    container_name: mysql
+    hostname: mysql
+    environment:
+      SHELLINABOX_PORT: 9102
+      MYSQL_ROOT_PASSWORD: mariadb
+      MYSQL_DATABASE1: nextcloud
+      MYSQL_USER1: nc_user
+      MYSQL_PASSWORD1: nextcloud
+      MYSQL_DATABASE2: phpmyadmin
+      MYSQL_USER2: pmauser
+      MYSQL_PASSWORD2: phpmyadmin
+      PASSWORD: webapp
+    ports:
+     - "3306:3306"
+     - "2222:22"
+     - "9102:4200"
+     - "9002:9001"
+    networks:
+     - nc-net
+  nextcloud:
+    depends_on:
+      - mysql
+    image: orboan/nextcloud-https
+    container_name: nextcloud.io
+    hostname: nextcloud.io
+    environment:
+      SHELLINABOX_PORT: 9101
+    ports:
+     - "443:443"
+     - "80:80"
+     - "2221:22"
+     - "9101:4200"
+     - "9001:9001"
+    volumes:
+     - ~/data/nc:/var/www/html/data
+    networks:
+     - nc-net
+  phpmyadmin:
+    depends_on:
+     - mysql
+    image: orboan/dcsss-httpd-phpmyadmin
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    environment:
+      SHELLINABOX_PORT: 9103
+      MYSQL_DATABASE: phpmyadmin
+      MYSQL_USER: pmauser
+      MYSQL_PASSWORD: phpmyadmin
+      MYSQL_ROOT_PASSWORD: mariadb
+      PASSWORD: webapp
+    ports:
+     - "8080:80"
+     - "4443:443"
+     - "2223:22"
+     - "9103:4200"
+     - "9003:9001"
+    networks:
+     - nc-net
+    restart: always
+  collabora:
+    image: orboan/collabora
+    container_name: collabora
+    hostname: collabora
+    environment:
+      USERNAME: www
+      PASSWORD: iaw
+    ports:
+     - "9980:9980"
+    networks:
+     - nc-net
+networks:
+  nc-net:
+    driver: bridge
