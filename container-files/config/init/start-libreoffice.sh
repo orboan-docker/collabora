@@ -1,13 +1,8 @@
 #!/bin/sh
-if [ -z "$HOSTNAME" ]; then
-hostname=localhost
-else 
-hostname=$HOSTNAME
-fi
 
-hostname=collabora
+hostname=col.iaw.io
 
-DOMAIN=nextcloud.io
+DOMAIN=nc.iaw.io
 DOMAIN_RE=$(echo "$DOMAIN" | sed 's/\./\\\\./g')
 
 # Fix lool resolv.conf problem (wizdude)

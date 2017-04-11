@@ -1,9 +1,9 @@
 version: '2'
 services:
-  mysql:
+  db:
     image: orboan/dcsss-mariadb
-    container_name: mysql
-    hostname: mysql
+    container_name: db.iaw.io
+    hostname: db.iaw.io
     environment:
       SHELLINABOX_PORT: 9102
       MYSQL_ROOT_PASSWORD: mariadb
@@ -23,10 +23,10 @@ services:
      - nc-net
   nextcloud:
     depends_on:
-      - mysql
-    image: orboan/nextcloud-https
-    container_name: nextcloud.io
-    hostname: nextcloud.io
+      - db
+    image: orboan/nextcloud-https:iaw
+    container_name: nc.iaw.io
+    hostname: nc.iaw.io
     environment:
       SHELLINABOX_PORT: 9101
     ports:
@@ -41,10 +41,10 @@ services:
      - nc-net
   phpmyadmin:
     depends_on:
-     - mysql
+     - db
     image: orboan/dcsss-httpd-phpmyadmin
-    container_name: phpmyadmin
-    hostname: phpmyadmin
+    container_name: pma.iaw.io
+    hostname: pma.iaw.io
     environment:
       SHELLINABOX_PORT: 9103
       MYSQL_DATABASE: phpmyadmin
@@ -62,9 +62,9 @@ services:
      - nc-net
     restart: always
   collabora:
-    image: orboan/collabora
-    container_name: collabora
-    hostname: collabora
+    image: orboan/collabora:iaw
+    container_name: col.iaw.io
+    hostname: col.iaw.io
     environment:
       USERNAME: www
       PASSWORD: iaw
